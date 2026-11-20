@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width, height=device-height, user-scalable=0"
+    />
+    <title>Umbra</title>
+    <link rel="stylesheet" type="text/css" href="game.css" />
+  </head>
+  <body>
+    <canvas id="stage"></canvas>
+
+    <header class="hud" id="hud" hidden>
+      <div class="hud-left">
+        <span class="wordmark"><button class="back" id="back" aria-label="Back to start">←</button>Umbra</span>
+        <span class="hud-meta" id="hud-meta"></span>
+      </div>
+      <div class="hud-right">
+        <span class="moves" id="moves">0</span>
+        <span class="moves-label" id="moves-label">moves · par 0</span>
+        <button class="mute" id="mute" aria-label="Sound"></button>
+      </div>
+      <div class="warmth" aria-hidden="true"><div class="warmth-fill" id="warmth"></div></div>
+    </header>
+
+    <div class="hint" id="hint" hidden>Swipe to turn the glowing piece. Fill the outline with its shadow.</div>
+    <div class="coach" id="coach" hidden><b id="coach-text"></b><span>or tap the glowing button</span></div>
+
+    <header class="hud build-hud" id="build-hud" hidden>
+      <div class="hud-left">
+        <span class="wordmark">Shape Builder</span>
+        <span class="hud-meta">Tap a block face to add. Turn pieces to pose the shadow.</span>
+      </div>
+      <button class="close" id="build-close" aria-label="Close builder">×</button>
+    </header>
+    <div class="tools" id="tools" hidden>
+      <div class="chips" id="build-tabs"></div>
+      <div class="seg" role="group" aria-label="Tool">
+        <button id="tool-add" aria-pressed="true">Add</button>
+        <button id="tool-erase" aria-pressed="false">Erase</button>
+      </div>
+    </div>
+
+    <nav class="dock" id="dock" hidden>
+      <div class="chips" id="chips"></div>
+      <div class="pad" role="group" aria-label="Turn piece">
+        <button class="ctl" data-move="z+" aria-label="Twist left (Q)"></button>
+        <button class="ctl" data-move="y-" aria-label="Turn left (←)"></button>
+        <button class="ctl" data-move="x-" aria-label="Tip up (↑)"></button>
+        <button class="ctl" data-move="x+" aria-label="Tip down (↓)"></button>
+        <button class="ctl" data-move="y+" aria-label="Turn right (→)"></button>
+        <button class="ctl" data-move="z-" aria-label="Twist right (E)"></button>
+        <button class="ctl ctl-undo" id="undo" aria-label="Undo (Z)"></button>
+      </div>
+      <button class="btn btn-gold" id="build-done" hidden>Done: name it</button>
+    </nav>
+
+    <section class="sheet" id="intro" hidden>
+      <div class="card intro-card">
+        <p class="kicker" id="intro-kicker"></p>
+        <h1 class="title">Umbra</h1>
+        <p class="tagline">Turn the pieces. Cast the shape.</p>
+        <div class="stage-panel"><div class="beam"></div><div class="intro-shape" id="intro-shape"></div><span class="stage-label" id="stage-label">Today's shadow</span></div>
+        <div class="meta-row" id="intro-meta"></div>
+        <button class="btn btn-primary" id="play">Play</button>
+        <button class="btn btn-ghost" id="see-results" hidden>See today's results</button>
+        <div class="intro-links">
+          <button class="link" id="how">How to play</button>
+          <button class="link" id="open-builder">Build your own shadow</button>
+        </div>
+        <p class="foot" id="intro-foot"></p>
+      </div>
+    </section>
+
+    <section class="sheet" id="result" hidden>
+      <div class="card result-card">
+        <button class="card-close" id="res-close" aria-label="Close">×</button>
+        <p class="kicker" id="res-kicker"></p>
+        <div class="stage-panel small"><div class="beam"></div><div class="intro-shape" id="res-shape"></div><span class="stamp">Cast</span></div>
+        <div class="stars" id="res-stars"></div>
+        <h2 class="res-title" id="res-title"></h2>
+        <p class="res-sub" id="res-sub"></p>
+        <div class="tear" aria-hidden="true"></div>
+        <div class="stat-row" id="res-stats"></div>
+        <div class="dist">
+          <p class="dist-label" id="dist-label">How everyone did</p>
+          <div class="bars" id="bars"></div>
+        </div>
+        <ol class="top" id="top"></ol>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="comment">Post my result</button>
+          <button class="btn btn-ghost" id="share">Share</button>
+        </div>
+        <div class="intro-links">
+          <button class="link" id="replay">Play again for fun</button>
+          <button class="link" id="res-build">Build your own shadow</button>
+        </div>
+        <p class="foot" id="countdown"></p>
+      </div>
+    </section>
+
+    <section class="sheet" id="tut-done" hidden>
+      <div class="card">
+        <p class="kicker">You've got it</p>
+        <h2 class="res-title">That's the whole game</h2>
+        <p class="res-sub">Every day there's a new outline. Fill it with fewer turns to earn more stars. Bigger puzzles have up to three pieces: tap one to pick it.</p>
+        <button class="btn btn-primary" id="tut-go">Play today's shadow</button>
+      </div>
+    </section>
+
+    <section class="sheet" id="publish" hidden>
+      <div class="card">
+        <button class="card-close" id="pub-close" aria-label="Close">×</button>
+        <p class="kicker">Your shadow</p>
+        <div class="stage-panel"><div class="beam"></div><div class="intro-shape" id="pub-shape"></div></div>
+        <label class="field">
+          <span>What does it look like?</span>
+          <input id="pub-title" maxlength="40" placeholder="A sleepy cat" autocomplete="off" />
+        </label>
+        <p class="res-sub" id="pub-par"></p>
+        <p class="error" id="pub-error" hidden></p>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="pub-go">Publish</button>
+          <button class="btn btn-ghost" id="pub-test">Test play</button>
+        </div>
+        <button class="link" id="pub-back">Keep editing</button>
+        <p class="foot">Players get it scrambled. The most upvoted shadow each week becomes Community Sunday's daily, with your name on it.</p>
+      </div>
+    </section>
+
+    <div class="toast" id="toast" hidden></div>
+    <script type="module" src="game.ts"></script>
+  </body>
+</html>
