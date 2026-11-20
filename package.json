@@ -24,7 +24,7 @@
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource-variable/schibsted-grotesk": "^5.3.0",
     "@fontsource/dm-sans": "^5.3.0",
-    "@hono/node-server": "2.1.6",
+    "@hono/node-server": "2.1.11",
     "devvit": "0.15.4",
     "hono": "4.13.17",
     "three": "0.187.0"
